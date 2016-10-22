@@ -14,6 +14,9 @@
 // プッシュスイッチのIOポート番号
 #define SW_PIN 0
 
+// スイッチチャタキラー
+int sw_last_state;
+
 // TFT設定関連
 #define TFT_CS     15
 #define TFT_RST    5
@@ -40,6 +43,12 @@ void setup() {
 
   // IO設定(スイッチなのでINPUT)
   pinMode(SW_PIN, INPUT);
+  
+  // 前回スイッチ状態を初期化
+  sw_last_state = digitalRead(SW_PIN);
+  
+  // スイッチを割り込み設定する
+  attachInterrupt( SW_PIN, switch_interrupt_function, CHANGE );
 
   // タイマーカウントダウン不許可
   enable = false;
@@ -65,16 +74,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (digitalRead(SW_PIN) == 0) {
-    // スイッチが押されているのでトグルする
-    if (enable) {
-      enable = false;
-    } else {
-      enable = true;
-    }
-  }
-
   if (enable) {
     // タイマー許可
     if (timer_remain >= 0) {
@@ -134,3 +133,23 @@ void loop() {
     delay(500);
   }
 }
+
+// 割り込み
+void switch_interrupt_function(){
+  Serial.print("switch_interrupt_function");
+  // スイッチの状態取得
+  int state = digitalRead(SW_PIN);
+  if (sw_last_state != state) {
+    // 前回のスイッチ状態と異なる場合は、処理をする
+    sw_last_state = state;
+    if (state == 0) {
+      // スイッチが押されているのでトグルする
+      if (enable == true) {
+        enable = false;
+      } else {
+        enable = true;
+      }
+    }
+  }
+}
+
