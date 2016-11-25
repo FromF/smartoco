@@ -55,8 +55,9 @@ void setup() {
 
   // TFT初期化
   tft.initR(INITR_BLUETAB);   // initialize a ST7735S chip, black tab
-  tft.setTextWrap(false); // Allow text to run off right edge
+  tft.setTextWrap(false);     // Allow text to run off right edge
   tft.fillScreen(ST7735_BLACK);
+  tft.setRotation(1);         //横向きに表示
 
   // タイマー残秒数 2時間
   timer_remain = 2 * 60 * 60;
@@ -86,7 +87,7 @@ void loop() {
       // 画面消す
       tft.fillScreen(ST7735_BLUE);
       // 初期位置設定
-      tft.setCursor(0, 30);
+      tft.setCursor(0, 35);
 
       // 文字初期を白
       tft.setTextColor(ST7735_WHITE);
@@ -96,31 +97,29 @@ void loop() {
 
       // 文字描画
       tft.println("Time=");
+      tft.println("");
 
       ////////////////////////////////
       // 文字サイズ：4
       tft.setTextSize(4);
-      tft.print(" ");
-      // 文字サイズ：5
-      tft.setTextSize(5);
       sprintf(strTime, "%02d", hh); 
-      tft.println(strTime);
+      tft.print(strTime);
       ////////////////////////////////
+      // 文字サイズ：3
+      tft.setTextSize(3);
+      tft.print(":");
       // 文字サイズ：4
       tft.setTextSize(4);
-      tft.print(":");
-      // 文字サイズ：5
-      tft.setTextSize(5);
       sprintf(strTime, "%02d", mm); 
-      tft.println(strTime);
+      tft.print(strTime);
       ////////////////////////////////
-      // 文字サイズ：4
-      tft.setTextSize(4);
+      // 文字サイズ：2
+      tft.setTextSize(2);
       tft.print(":");
-      // 文字サイズ：5
-      tft.setTextSize(5);
+      // 文字サイズ：2
+      tft.setTextSize(2);
       sprintf(strTime, "%02d", ss); 
-      tft.println(strTime);
+      tft.print(strTime);
       // 1秒待つ
       delay(1000);
     }
